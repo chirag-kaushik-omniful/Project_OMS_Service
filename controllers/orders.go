@@ -1,9 +1,14 @@
 package controllers
 
 import (
+	"context"
+	"net/http"
 	services "oms/services/orders"
+	"oms/utils/sqs"
 
 	"github.com/gin-gonic/gin"
+	"github.com/omniful/go_commons/log"
+	SQS "github.com/omniful/go_commons/sqs"
 )
 
 func ViewOrders(c *gin.Context) {
@@ -13,9 +18,9 @@ func ViewOrders(c *gin.Context) {
 		return
 	}
 
-	// orders := getOrdersBySeller(sellerID)
+	orders := services.GetOrdersBySeller(c, sellerID)
 
-	c.JSON(200, gin.H{"orders": "orders"})
+	c.JSON(http.StatusOK, gin.H{"orders": orders})
 }
 
 func CreateBulkOrder(c *gin.Context) {
@@ -28,19 +33,19 @@ func CreateBulkOrder(c *gin.Context) {
 		return
 	}
 
-	// message := &SQS.Message{
-	// 	GroupId:         "group-1",
-	// 	Value:           []byte(req.Address),
-	// 	ReceiptHandle:   "group-1",
-	// 	DeduplicationId: "gp-1",
-	// }
+	message := &SQS.Message{
+		GroupId:         "group-1",
+		Value:           []byte(req.Address),
+		ReceiptHandle:   "group-1",
+		DeduplicationId: "gp-1",
+	}
 
-	// ctx := context.Background()
-	// if err := sqs.Publisher.Publish(ctx, message); err != nil {
-	// 	log.Errorf("Failed to publish message: %v", err)
-	// }
+	ctx := context.Background()
+	if err := sqs.Publisher.Publish(ctx, message); err != nil {
+		log.Errorf("Failed to publish message: %v", err)
+	}
 
-	services.CreateBulkOrder(req.Address)
+	// services.CreateBulkOrder(req.Address)
 
-	c.JSON(200, gin.H{"data": "data"})
+	c.JSON(http.StatusOK, gin.H{"message": "success"})
 }
