@@ -3,6 +3,7 @@ package kafka
 import (
 	"context"
 	"fmt"
+	services "oms/services/orders"
 	"time"
 
 	"github.com/omniful/go_commons/kafka"
@@ -19,6 +20,7 @@ type MessageHandler struct{}
 func (h *MessageHandler) Process(ctx context.Context, msg *pubsub.Message) error {
 	// Process message
 	fmt.Println(string(msg.Value))
+	services.UpdateInventory(msg.Value)
 	return nil
 }
 

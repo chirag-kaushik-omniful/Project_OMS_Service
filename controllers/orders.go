@@ -28,17 +28,19 @@ func CreateBulkOrder(c *gin.Context) {
 		return
 	}
 
-	message := &SQS.Message{
-		GroupId:         "group-1",
-		Value:           []byte(req.Address),
-		ReceiptHandle:   "group-1",
-		DeduplicationId: "gp-1",
-	}
+	// message := &SQS.Message{
+	// 	GroupId:         "group-1",
+	// 	Value:           []byte(req.Address),
+	// 	ReceiptHandle:   "group-1",
+	// 	DeduplicationId: "gp-1",
+	// }
 
-	ctx := context.Background()
-	if err := sqs.Publisher.Publish(ctx, message); err != nil {
-		log.Errorf("Failed to publish message: %v", err)
-	}
+	// ctx := context.Background()
+	// if err := sqs.Publisher.Publish(ctx, message); err != nil {
+	// 	log.Errorf("Failed to publish message: %v", err)
+	// }
+
+	services.CreateBulkOrder(req.Address)
 
 	c.JSON(200, gin.H{"data": "data"})
 }
