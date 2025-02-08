@@ -8,6 +8,7 @@ import (
 	"oms/routes"
 	"oms/utils/dbconn"
 	"oms/utils/intsrv"
+	"oms/utils/kafka"
 	"oms/utils/sqs"
 
 	"github.com/omniful/go_commons/config"
@@ -27,6 +28,7 @@ func main() {
 	dbconn.Connect(config.GetString(context.Background(), "mongodb.url"))
 	intsrv.InitInterSrvClient()
 	sqs.InitSQS()
+	kafka.InitKafka()
 
 	err = srv.StartServer("oms")
 	if err != nil {
